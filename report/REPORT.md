@@ -1,7 +1,7 @@
 # Báo Cáo Lab 7: Embedding & Vector Store
 
 **Họ tên:** Lê Huy Hồng Nhật
-**Nhóm:** Nhóm Luật pháp Việt Nam (2025-2026)
+**Nhóm:** C401-D6
 **Ngày:** 10/04/2026
 
 ---

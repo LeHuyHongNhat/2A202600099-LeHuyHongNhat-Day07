@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 
 LOCAL_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 OPENAI_EMBEDDING_MODEL = "text-embedding-3-small"
@@ -59,3 +60,24 @@ class OpenAIEmbedder:
 
 
 _mock_embed = MockEmbedder()
+
+
+def get_embedder(provider: str | None = None) -> MockEmbedder | LocalEmbedder | OpenAIEmbedder:
+    """Return the appropriate embedder based on *provider* or the environment variable.
+
+    Priority:
+        1. Explicit ``provider`` argument.
+        2. ``EMBEDDING_PROVIDER`` environment variable.
+        3. Defaults to ``"openai"``.
+
+    Accepted values:
+        - ``"openai"``  → :class:`OpenAIEmbedder`
+        - ``"local"``   → :class:`LocalEmbedder`
+        - ``"mock"``    → :class:`MockEmbedder`
+    """
+    resolved = (provider or os.getenv(EMBEDDING_PROVIDER_ENV, "openai")).lower()
+    if resolved == "openai":
+        return OpenAIEmbedder(model_name=OPENAI_EMBEDDING_MODEL)
+    if resolved == "local":
+        return LocalEmbedder(model_name=LOCAL_EMBEDDING_MODEL)
+    return MockEmbedder()

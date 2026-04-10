@@ -14,9 +14,19 @@ class KnowledgeBaseAgent:
     """
 
     def __init__(self, store: EmbeddingStore, llm_fn: Callable[[str], str]) -> None:
-        # TODO: store references to store and llm_fn
-        pass
+        self.store = store
+        self.llm_fn = llm_fn
 
     def answer(self, question: str, top_k: int = 3) -> str:
-        # TODO: retrieve chunks, build prompt, call llm_fn
-        raise NotImplementedError("Implement KnowledgeBaseAgent.answer")
+        results = self.store.search(question, top_k=top_k)
+        context_blocks = "\n\n".join(
+            f"[{i + 1}] {r['content']}" for i, r in enumerate(results)
+        )
+        prompt = (
+            "You are a helpful assistant. Use only the context below to answer the question.\n"
+            "If the answer cannot be found in the context, say you don't know.\n\n"
+            f"Context:\n{context_blocks}\n\n"
+            f"Question: {question}\n"
+            "Answer:"
+        )
+        return self.llm_fn(prompt)

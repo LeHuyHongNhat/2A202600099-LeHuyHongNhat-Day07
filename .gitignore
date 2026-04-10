@@ -17,3 +17,10 @@ __pycache__/
 .omx/
 .venv/
 src_w_solution/
+
+# Embedding cache
+*.pkl
+.chroma_data/
+
+# Benchmark output
+output_query*.txt
